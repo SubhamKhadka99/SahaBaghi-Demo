@@ -1,6 +1,6 @@
-import { BarChart3, Layers3, Settings, Truck } from "lucide-react";
+import { BarChart3, Layers3, Settings, Trophy, Truck } from "lucide-react";
 
-export type AdminSection = "overview" | "dispatch" | "analytics" | "settings";
+export type AdminSection = "overview" | "dispatch" | "analytics" | "leaderboard" | "settings";
 
 interface AdminSidebarProps {
   activeSection: AdminSection;
@@ -33,6 +33,13 @@ export default function AdminSidebar({ activeSection, onSectionChange }: AdminSi
         <button onClick={() => onSectionChange("analytics")} className={getButtonClass(activeSection === "analytics")}>
           <BarChart3 size={16} />
           Analytics
+        </button>
+        <button
+          onClick={() => onSectionChange("leaderboard")}
+          className={getButtonClass(activeSection === "leaderboard")}
+        >
+          <Trophy size={16} />
+          Leaderboard
         </button>
         <button onClick={() => onSectionChange("settings")} className={getButtonClass(activeSection === "settings")}>
           <Settings size={16} />

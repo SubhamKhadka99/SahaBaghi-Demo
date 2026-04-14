@@ -57,6 +57,14 @@ const DEMO_REPORTS: AdminReport[] = [
   }
 ];
 
+const DEMO_LEADERBOARD = [
+  { name: "Asha Tamang", reports: 23, ward: "Ward 10" },
+  { name: "Subham Khadka", reports: 19, ward: "Ward 10" },
+  { name: "Nabin Shrestha", reports: 17, ward: "Ward 10" },
+  { name: "Sita Karki", reports: 14, ward: "Ward 10" },
+  { name: "Ramesh Gurung", reports: 11, ward: "Ward 10" }
+];
+
 function statusBadge(status: CivicReport["status"]) {
   if (status === "Resolved") return "bg-emerald-100 text-emerald-700";
   if (status === "Dispatched") return "bg-amber-100 text-amber-700";
@@ -381,6 +389,35 @@ export default function AdminDashboard() {
                   are live in Firestore when configured.
                 </p>
               </div>
+            </div>
+          </section>
+        )}
+
+        {activeSection === "leaderboard" && (
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-[#0A192F]">Citizen Reporter Leaderboard</h3>
+              <p className="text-sm text-slate-500">Dummy ranking by total reports submitted.</p>
+            </div>
+            <div className="space-y-3">
+              {DEMO_LEADERBOARD.map((citizen, index) => (
+                <article
+                  key={citizen.name}
+                  className={`flex items-center justify-between rounded-xl border p-3 ${
+                    index === 0 ? "border-amber-300 bg-amber-50" : "border-gray-200 bg-slate-50"
+                  }`}
+                >
+                  <div>
+                    <p className="font-semibold text-[#0A192F]">
+                      {index + 1}. {citizen.name}
+                    </p>
+                    <p className="text-xs text-slate-500">{citizen.ward}</p>
+                  </div>
+                  <p className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-[#0A192F]">
+                    {citizen.reports} reports
+                  </p>
+                </article>
+              ))}
             </div>
           </section>
         )}

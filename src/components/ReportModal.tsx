@@ -1,7 +1,20 @@
 import { Camera, Loader2, MapPinned, Send } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 
-type IssueType = "Pothole" | "Blocked Drain" | "Waste Dumping" | "Broken Light";
+type IssueType =
+  | "Pothole"
+  | "Blocked Drain"
+  | "Waste Dumping"
+  | "Broken Light"
+  | "Road Crack"
+  | "Water Leakage"
+  | "Sewer Overflow"
+  | "Illegal Parking"
+  | "Traffic Signal Fault"
+  | "Fallen Tree"
+  | "Graffiti / Vandalism"
+  | "Stray Animals"
+  | "Others";
 
 interface ReportModalProps {
   open: boolean;
@@ -14,7 +27,16 @@ const ISSUE_OPTIONS: IssueType[] = [
   "Pothole",
   "Blocked Drain",
   "Waste Dumping",
-  "Broken Light"
+  "Broken Light",
+  "Road Crack",
+  "Water Leakage",
+  "Sewer Overflow",
+  "Illegal Parking",
+  "Traffic Signal Fault",
+  "Fallen Tree",
+  "Graffiti / Vandalism",
+  "Stray Animals",
+  "Others"
 ];
 
 export default function ReportModal({ open, submitting, onClose, onSubmit }: ReportModalProps) {

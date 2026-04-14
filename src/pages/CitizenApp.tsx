@@ -7,7 +7,7 @@ import {
   Info,
   Loader2,
   MapPinned,
-  Medal,
+  Plus,
   Siren,
   Trophy
 } from "lucide-react";
@@ -17,7 +17,16 @@ import MapView, { type CivicReport } from "../components/MapView";
 import ReportModal from "../components/ReportModal";
 import { db } from "../lib/firebase";
 
-type CitizenTab = "home" | "map" | "profile";
+type CitizenTab = "home" | "map" | "leaderboard" | "profile";
+type CitizenLeaderboardEntry = { name: string; reports: number };
+
+const DEMO_CITIZEN_LEADERBOARD: CitizenLeaderboardEntry[] = [
+  { name: "Asha Tamang", reports: 23 },
+  { name: "Subham Khadka", reports: 19 },
+  { name: "Nabin Shrestha", reports: 17 },
+  { name: "Sita Karki", reports: 14 },
+  { name: "Ramesh Gurung", reports: 11 }
+];
 
 function formatTime(timestamp?: number) {
   if (!timestamp) return "Just now";
@@ -161,7 +170,13 @@ export default function CitizenApp() {
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[#00B4D8]">Saha-Bhagi</p>
               <h1 className="text-xl font-semibold text-[#0A192F]">
-                {tab === "map" ? "Live Ward Map" : tab === "profile" ? "Subham's Profile" : "Community Feed"}
+                {tab === "map"
+                  ? "Live Ward Map"
+                  : tab === "profile"
+                    ? "Subham's Profile"
+                    : tab === "leaderboard"
+                      ? "Ward 10 Leaderboard"
+                      : "Community Feed"}
               </h1>
             </div>
             <button className="rounded-full border border-gray-200 p-2 text-[#0A192F]">
@@ -300,32 +315,67 @@ export default function CitizenApp() {
                     <p className="text-xs text-slate-500">Issues Resolved</p>
                   </div>
                 </div>
-                <p className="mb-2 mt-4 text-xs font-medium text-slate-600">
-                  2 Reports away from the Ward 10 Chairman's Certificate!
-                </p>
-                <div className="h-2 rounded-full bg-slate-200">
-                  <div className="h-2 w-4/5 rounded-full bg-[#00B4D8]" />
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+                <h3 className="mb-3 text-sm font-semibold text-[#0A192F]">Personal Information</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="text-slate-500">Phone</span>
+                    <span className="font-medium text-[#0A192F]">+977 9812345678</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="text-slate-500">Email</span>
+                    <span className="font-medium text-[#0A192F]">subham.demo@sahabhagi.app</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="text-slate-500">Address</span>
+                    <span className="font-medium text-[#0A192F]">New Baneshwor, Kathmandu</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+                    <span className="text-slate-500">Member Since</span>
+                    <span className="font-medium text-[#0A192F]">Jan 2025</span>
+                  </div>
                 </div>
               </div>
 
               <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
                 <div className="mb-3 flex items-center gap-2">
-                  <Trophy className="text-amber-500" size={18} />
-                  <h3 className="font-semibold text-[#0A192F]">Ward 10 Leaderboard</h3>
+                  <Trophy className="text-[#00B4D8]" size={18} />
+                  <h3 className="font-semibold text-[#0A192F]">Next Level Progress</h3>
                 </div>
+                <p className="mb-2 text-xs font-medium text-slate-600">2 more reports to reach Level 5 Civic Leader.</p>
+                <div className="h-2 rounded-full bg-slate-200">
+                  <div className="h-2 w-4/5 rounded-full bg-[#00B4D8]" />
+                </div>
+              </div>
+            </section>
+          ) : null}
+
+          {tab === "leaderboard" ? (
+            <section className="h-full overflow-y-auto px-4 py-4 pb-28">
+              <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="mb-3 flex items-center gap-2">
+                  <Trophy className="text-amber-500" size={18} />
+                  <h3 className="font-semibold text-[#0A192F]">Top Citizen Reporters</h3>
+                </div>
+                <p className="mb-3 text-xs text-slate-500">Dummy leaderboard based on number of reports submitted.</p>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
-                    <span>1. Asha Tamang</span>
-                    <span className="font-semibold">18 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-xl border border-[#00B4D8]/30 bg-[#00B4D8]/10 px-3 py-2">
-                    <span className="font-semibold text-[#0A192F]">2. Subham Khadka</span>
-                    <span className="font-semibold text-[#0A192F]">16 pts</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
-                    <span>3. Nabin Shrestha</span>
-                    <span className="font-semibold">14 pts</span>
-                  </div>
+                  {DEMO_CITIZEN_LEADERBOARD.map((citizen, index) => (
+                    <div
+                      key={citizen.name}
+                      className={`flex items-center justify-between rounded-xl px-3 py-2 ${
+                        index === 1
+                          ? "border border-[#00B4D8]/30 bg-[#00B4D8]/10"
+                          : "bg-slate-50"
+                      }`}
+                    >
+                      <span className={index === 1 ? "font-semibold text-[#0A192F]" : ""}>
+                        {index + 1}. {citizen.name}
+                      </span>
+                      <span className="font-semibold">{citizen.reports} reports</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>
@@ -353,7 +403,7 @@ export default function CitizenApp() {
               className="-mt-8 flex h-14 w-14 items-center justify-center rounded-full bg-[#00B4D8] text-white shadow-lg transition hover:scale-105"
               aria-label="Report"
             >
-              <Medal size={22} />
+              <Plus size={24} strokeWidth={2.5} />
             </button>
             <button
               onClick={() => setTab("profile")}
@@ -362,7 +412,13 @@ export default function CitizenApp() {
               <CircleUserRound size={18} />
               Profile
             </button>
-            <span className="flex w-9 flex-col items-center gap-1 text-xs text-slate-400"> </span>
+            <button
+              onClick={() => setTab("leaderboard")}
+              className={`flex flex-col items-center gap-1 text-xs ${tab === "leaderboard" ? "text-[#00B4D8]" : "text-slate-500"}`}
+            >
+              <Trophy size={18} />
+              Leaderboard
+            </button>
           </div>
         </nav>
       </div>
